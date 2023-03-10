@@ -6,13 +6,14 @@ var _condition_with: Array[int] = [];
 var _condition_without: Array[int] = [];
 var _entities_matched: Dictionary = {};
 
+# call this before freeing the object
 func reset():
 	if _world != null:
 		_world._filters.erase(self);
 		_world = null;
-		_condition_with.clear();
-		_condition_without.clear();
-		_entities_matched.clear();
+	_condition_with.clear();
+	_condition_without.clear();
+	_entities_matched.clear();
 
 func has_target() -> bool:
 	return _world != null;
