@@ -61,6 +61,8 @@ func get_component(entity: int, component: int) -> Variant:
 
 func add_component(entity: int, component: int, value: Variant) -> void:
 	assert(_entities.has(entity), ERROR_NOT_EXIST % entity);
+	assert(!_entities[entity].has(component)
+	, "Cannot add component id '%s' since entity #%s already has one." % [component, entity])
 	_entities[entity][component] = value;
 	for filter in _filters:
 		filter._on_component_added(entity, component, value);
@@ -78,12 +80,11 @@ func remove_component(entity: int, component: int) -> bool:
 	else:
 		return false;
 		
-func update_component(entity: int, component: int, value: Variant) -> bool:
+func update_component(entity: int, component: int, value: Variant) -> void:
 	assert(_entities.has(entity), ERROR_NOT_EXIST % entity);
+	assert(_entities[entity].has(component)
+	, "Cannot update component id '%s' since entity #%s doesn't have one." % [component, entity])
 	if _entities[entity].has(component):
 		var before = _entities[entity][component];
 		_entities[entity][component] = value;
 		component_updated.emit(entity, component, before, value);
-		return true;
-	else:
-		return false;

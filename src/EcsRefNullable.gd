@@ -35,9 +35,9 @@ func remove(component: int) -> bool:
 	if !exist(): return false;
 	return _world.remove_component(_id, component);
 
-func update(component: int, value: Variant) -> bool:
-	if !exist(): return false;
-	return _world.update_component(_id, component, value);
+func update(component: int, value: Variant) -> void:
+	if !exist(): return;
+	_world.update_component(_id, component, value);
 
 func destroy() -> void:
 	if !exist(): return;

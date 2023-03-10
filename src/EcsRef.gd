@@ -30,8 +30,8 @@ func add(component: int, value: Variant) -> void:
 func remove(component: int) -> bool:
 	return _world.remove_component(_id, component);
 
-func update(component: int, value: Variant) -> bool:
-	return _world.update_component(_id, component, value);
+func update(component: int, value: Variant) -> void:
+	_world.update_component(_id, component, value);
 
 func destroy() -> void:
 	_world.destroy_entity(_id);
