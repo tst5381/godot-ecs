@@ -80,10 +80,10 @@ With `EcsFilter` you can query entities with conditions.
 ```
 var filter: EcsFilter = EcsFilter.new()
 
-# add fist condition 
+# add first condition.
 filter.with(Component.BURNING)
 
-# add second condition
+# add second condition.
 filter.without(Component.SPEED)
 
 # when a target is set, filter will be applied and updated constantly,
