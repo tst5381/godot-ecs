@@ -1,31 +1,39 @@
 # Quick Start
 ## Basics
-Create a `EcsWorld` instance and an entity from it.
-Entities are simply integers.
+
+To start, attach `EcsWorld.gd` to a node and reference it in other scripts.
+
+You can also create an instance of `EcsWorld` by code:
 ```python
 var world: EcsWorld = EcsWorld.new()
+```
+
+Create an entity from the world. Entities are simply integers.
+```python
 var entity: int = world.create_entity()
 ```
 
 Add a component to the entity. Component types are also integers, and values are not statically typed.
 ```python
-var component: int = 0
-world.add_component(entity, component, "component's value")
+var component_type: int = 0
+world.add_component(entity, component_type, "component's value")
 ```
 
-Consider using enums or constants for better readability.
+Consider defining component types by enum for better readability.
 ```python
-# Component.gd
+# Ecs.gd
+class_name Ecs
 
-class_name Component
-
-const BURNING  = 0
-const SPEED    = 1
-const TOOLTIP  = 2
+enum Components
+{
+  BURNING,
+  SPEED,
+  TOOLTIP,
+}
 ```
 ```python
-world.add_component(entity, Component.BURNING, true)
-world.add_component(entity, Component.SPEED, 1.25)
+world.add_component(entity, Ecs.Components.BURNING, true)
+world.add_component(entity, Ecs.Components.SPEED, 1.25)
 ```
 You can get `EcsRef` from the world as a wrapper of entity integer.
 
@@ -33,58 +41,49 @@ You can get `EcsRef` from the world as a wrapper of entity integer.
 ```python
 var ent: EcsRef = world.create_entity_to_ref()
 
-ent.add(Component.SPEED, 1.25)
+ent.add(Ecs.Components.SPEED, 1.25)
 
-if ent.exist() && ent.has(Component.SPEED):
-  ent.update(Component.SPEED, 1.8)
+if ent.exist() && ent.has(Ecs.Components.SPEED):
+  ent.update(Ecs.Components.SPEED, 1.8)
 
-var recentSpeed = ent.get_value(Component.SPEED) 
-ent.remove(Component.SPEED)
+var recentSpeed = ent.get_value(Ecs.Components.SPEED) 
+ent.remove(Ecs.Components.SPEED)
 ```
 
-Extend `EcsSystem` and override functions like `_on_target_added` to react to component events. 
+Extend `EcsSystem` and override functions like `is_observing` to react to component events. 
 ```python
-# BunringSystem.gd
-
-class_name BurningSystem
+# BurningSystem.gd
 extends EcsSystem
 
-func _init():
-  # booleans define whether this system should observe added, removed, and updated events.
-  super._init(Component.BURNING, true, true, true)
+# for selecting what type to observe via editor
+@export var observing: Ecs.Components
 
-func _on_target_added(entity, component, value):
-  # do things when BURNING is added to entity.
-  pass
+func is_observing(component) -> bool:
+  return component == observing
 
-func _on_target_removed(entity, component, value):
-  # do things when BURNING is removed from entity.
-  pass
+func on_added(entity, component, value):
+  # do things when component is added to entity.
 
-func _on_target_updated(entity, component, before, after):
-  # do things when BURNING is updated on entity.
-  pass
+func on_removed(entity, component, value):
+  # do things when component is removed from entity.
+
+func on_updated(entity, component, before, after):
+  # do things when component is updated on entity.
+
 ```
-To use it:
-```python
-var system: BurningSystem = BurningSystem.new()
+To use it, attach `BurningSystem.gd` to a node, and link `EcsWorld` node via the editor.
 
-# system will now react to events from the world.
-system.include(world)
 
-# system wil stop reacting to events from the world.
-system.exclude(world)
-```
 ## Filter
 With `EcsFilter` you can query entities with conditions.
 ```python
 var filter: EcsFilter = EcsFilter.new()
 
 # add first condition.
-filter.with(Component.BURNING)
+filter.with(Ecs.Components.BURNING)
 
 # add second condition.
-filter.without(Component.SPEED)
+filter.without(Ecs.Components.SPEED)
 
 # when a target is set, filter will be applied and updated constantly,
 # and can no longer add conditions.
@@ -96,7 +95,7 @@ var entities: Array[int] = filter.get_matched_entities
 
 Setup functions of `EcsFilter` can be chained.
 ```python
-var filter = EcsFilter.new().with(Component.BURNING).without(Component.SPEED).set_target(world)
+var filter = EcsFilter.new().with(Ecs.Components.BURNING).without(Ecs.Components.SPEED).set_target(world)
 ```
 
 Dispose a filter when it is no longer needed (for the sake of memory and performance.)
@@ -117,6 +116,6 @@ var nullable: EcsRefNullable = ent.to_nullable()
 
 ent.destroy() # removes the entity from the world.
 
-nullable.add(Component.SPEED, 1.5) # will do nothing.
-ent.add(Component.SPEED, 1.5) # will throw an error.
+nullable.add(Ecs.Components.SPEED, 1.5) # will do nothing.
+ent.add(Ecs.Components.SPEED, 1.5) # will throw an error.
 ```
