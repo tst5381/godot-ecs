@@ -93,7 +93,7 @@ filter.set_target(world)
 var entities: Array[int] = filter.get_matched_entities
 ```
 
-Setup functions of `EcsFilter` can be chained.
+Setup functions can be chained.
 ```python
 var filter = EcsFilter.new().with(Ecs.Components.BURNING).without(Ecs.Components.SPEED).set_target(world)
 ```
