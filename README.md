@@ -46,24 +46,24 @@ Extend `EcsSystem` and override functions like `_on_target_added` to react to co
 ```python
 # BunringSystem.gd
 
-class_name BurningSystem;
+class_name BurningSystem
 extends EcsSystem
 
 func _init():
   # booleans define whether this system should observe added, removed, and updated events.
-  super._init(Component.BURNING, true, true, true);
+  super._init(Component.BURNING, true, true, true)
 
 func _on_target_added(entity, component, value):
   # do things when BURNING is added to entity.
-  pass;
+  pass
 
 func _on_target_removed(entity, component, value):
   # do things when BURNING is removed from entity.
-  pass;
+  pass
 
 func _on_target_updated(entity, component, before, after):
   # do things when BURNING is updated on entity.
-  pass;
+  pass
 ```
 To use it:
 ```python
