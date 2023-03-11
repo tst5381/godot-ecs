@@ -37,10 +37,6 @@ func get_entities_to_ref() -> Array[EcsRef]:
 			array.append(EcsRef.new(id, self));
 	return array;
 
-func get_component_values(component: int) -> Array:
-	var pool = _get_component_pool(component);
-	return pool.values().duplicate();
-
 func create_entity() -> int:
 	var id = _next_id;
 	_exist_list.append(true);
@@ -121,6 +117,11 @@ func update_component(entity: int, component: int, value: Variant) -> void:
 		if system.observe_update && system.is_observing(component):
 			system.on_updated(entity, component, before, value);
 	component_updated.emit(entity, component, before, value);
+
+func get_component_pool_copy(component: int) -> Dictionary:
+	var copy = _get_component_pool(component).duplicate();
+	copy.make_read_only();
+	return copy;
 
 func _get_component_pool(component: int) -> Dictionary:
 	var pool = _component_pools.get(component, null);
