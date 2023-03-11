@@ -2,19 +2,19 @@
 ## Basics
 Create a `EcsWorld` instance and an entity from it.
 Entities are simply integers.
-```
+```python
 var world: EcsWorld = EcsWorld.new()
 var entity: int = world.create_entity()
 ```
 
 Add a component to the entity. Component types are also integers, and values are not statically typed.
-```
+```python
 var component: int = 0
 world.add_component(entity, component, "component's value")
 ```
 
 Consider using enums or constants for better readability.
-```
+```python
 # Component.gd
 
 class_name Component
@@ -23,14 +23,14 @@ const BURNING  = 0
 const SPEED    = 1
 const TOOLTIP  = 2
 ```
-```
+```python
 world.add_component(entity, Component.BURNING, true)
 world.add_component(entity, Component.SPEED, 1.25)
 ```
 You can get `EcsRef` from the world as a wrapper of entity integer.
 
 `EcsRef` provides shorter and intuitive APIs for convenience.
-```
+```python
 var ent: EcsRef = world.create_entity_to_ref()
 
 ent.add(Component.SPEED, 1.25)
@@ -43,7 +43,7 @@ ent.remove(Component.SPEED)
 ```
 
 Extend `EcsSystem` and override functions like `_on_target_added` to react to component events. 
-```
+```python
 # BunringSystem.gd
 
 class_name BurningSystem;
@@ -66,7 +66,7 @@ func _on_target_updated(entity, component, before, after):
   pass;
 ```
 To use it:
-```
+```python
 var system: BurningSystem = BurningSystem.new()
 
 # system will now react to events from the world.
@@ -77,7 +77,7 @@ system.exclude(world)
 ```
 ## Filter
 With `EcsFilter` you can query entities with conditions.
-```
+```python
 var filter: EcsFilter = EcsFilter.new()
 
 # add first condition.
@@ -95,12 +95,12 @@ var entities: Array[int] = filter.get_matched_entities
 ```
 
 Setup functions of `EcsFilter` can be chained.
-```
+```python
 var filter = EcsFilter.new().with(Component.BURNING).without(Component.SPEED).set_target(world)
 ```
 
 Dispose a filter when it is no longer needed (for the sake of memory and performance.)
-```
+```python
 # this removes filter from the world, so it can be freed safely.
 filter.reset()
 
@@ -111,7 +111,7 @@ filter.free()
 `EcsRef` can be converted to `EcsRefNullable` and vise versa.
 
 `EcsRefNullable` will skip operations when the entity does not exist, while `EcsRef` will throw errors.
-```
+```python
 var ent: EcsRef = world.create_entity_to_ref()
 var nullable: EcsRefNullable = ent.to_nullable()
 
