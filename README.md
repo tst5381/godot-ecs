@@ -7,9 +7,7 @@ var world: EcsWorld = EcsWorld.new()
 var entity: int = world.create_entity()
 ```
 
-Add a component to an entity. 
-Component types are also integers. Component values are not statically typed.
-
+Add a component to the entity. Component types are also integers, and values are not statically typed.
 ```
 var component: int = 0
 world.add_component(entity, component, "component's value")
@@ -18,6 +16,7 @@ world.add_component(entity, component, "component's value")
 Consider using enums or constants for better readability.
 ```
 # Component.gd
+
 class_name Component
 
 const BURNING  = 0
@@ -46,6 +45,7 @@ ent.remove(Component.SPEED)
 Extend `EcsSystem` and override functions like `_on_target_added` to react to component events. 
 ```
 # BunringSystem.gd
+
 class_name BurningSystem;
 extends EcsSystem
 
@@ -86,7 +86,8 @@ filter.with(Component.BURNING)
 # add second condition
 filter.without(Component.SPEED)
 
-# when a target is set, filter will be applied and can no longer add conditions
+# when a target is set, filter will be applied and updated constantly,
+# and can no longer add conditions.
 filter.set_target(world)
 
 # returns an array of entities that have BURNING but not SPEED.
@@ -98,7 +99,7 @@ Setup functions of `EcsFilter` can be chained.
 var filter = EcsFilter.new().with(Component.BURNING).without(Component.SPEED).set_target(world)
 ```
 
-Be sure to dispose a filter when it's no longer needed (for the sake of memory and performance.)
+Dispose a filter when it is no longer needed (for the sake of memory and performance.)
 ```
 # this removes filter from the world, so it can be freed safely.
 filter.reset()
