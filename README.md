@@ -5,17 +5,17 @@ To start, attach `EcsWorld.gd` to a node and reference it in other scripts.
 
 You can also create an instance of `EcsWorld` by code:
 ```python
-var world: EcsWorld = EcsWorld.new()
+var world:EcsWorld = EcsWorld.new()
 ```
 
 Create an entity from the world. Entities are simply integers.
 ```python
-var entity: int = world.create_entity()
+var entity:int = world.create_entity()
 ```
 
 Add a component to the entity. Component types are also integers, and values are not statically typed.
 ```python
-var component_type: int = 0
+var component_type:int = 0
 world.add_component(entity, component_type, "component's value")
 ```
 
@@ -39,7 +39,7 @@ You can get `EcsRef` from the world as a wrapper of entity integer.
 
 `EcsRef` provides shorter and intuitive APIs for convenience.
 ```python
-var ent: EcsRef = world.create_entity_to_ref()
+var ent:EcsRef = world.create_entity_to_ref()
 
 ent.add(Ecs.Components.SPEED, 1.25)
 
@@ -56,7 +56,7 @@ Extend `EcsSystem` and override functions like `is_observing` to react to compon
 extends EcsSystem
 
 # for selecting what type to observe via editor
-@export var observing: Ecs.Components
+@export var observing:Ecs.Components = Ecs.Components.BURNING
 
 func is_observing(component) -> bool:
   return component == observing
@@ -77,7 +77,7 @@ To use it, attach `BurningSystem.gd` to a node, and link `EcsWorld` node via the
 ## Filter
 With `EcsFilter` you can query entities with conditions.
 ```python
-var filter: EcsFilter = EcsFilter.new()
+var filter:EcsFilter = EcsFilter.new()
 
 # add first condition.
 filter.with(Ecs.Components.BURNING)
@@ -90,7 +90,7 @@ filter.without(Ecs.Components.SPEED)
 filter.set_target(world)
 
 # returns an array of entities that have BURNING but not SPEED.
-var entities: Array[int] = filter.get_matched_entities
+var entities:Array[int] = filter.get_matched_entities
 ```
 
 Setup functions can be chained.
@@ -111,8 +111,8 @@ filter.free()
 
 `EcsRefNullable` will skip operations when the entity does not exist, while `EcsRef` will throw errors.
 ```python
-var ent: EcsRef = world.create_entity_to_ref()
-var nullable: EcsRefNullable = ent.to_nullable()
+var ent:EcsRef = world.create_entity_to_ref()
+var nullable:EcsRefNullable = ent.to_nullable()
 
 ent.destroy() # removes the entity from the world.
 
