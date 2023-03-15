@@ -16,7 +16,7 @@ var entity:int = world.create_entity()
 Add a component to the entity. Component types are `StringName`, and values are not statically typed.
 ```python
 var component_type:StringName = "Tooltip"
-world.add_component(entity, component_type, "A component's value can be any type.")
+world.add_component(entity, component_type, "This is the value of the component.")
 ```
 
 Consider defining component types as `const` in a file.
@@ -72,7 +72,7 @@ Be careful that to get a component's value you call `get_value()` not `get()`.
 
 This is error-prone, but `get()` is inherited from `Object` and there is no way to override it.
 
-## EcsSystem
+## System
 Extend `EcsSystem` and override functions like `is_observing` to react to component events. 
 ```python
 # BurningSystem.gd
