@@ -12,25 +12,25 @@ func _init(id: int, world: EcsWorld):
 func exist() -> bool:
 	return _world.exist(_id);
 
-func has(component: String) -> bool:
+func has(component: StringName) -> bool:
 	return _world.has_component(_id, component);
 
-func get_value(component: String) -> Variant:
+func get_value(component: StringName) -> Variant:
 	return _world.get_component(_id, component);
 
-func set_value(component: String, value: Variant) -> void:
+func set_value(component: StringName, value: Variant) -> void:
 	if _world.has_component(_id, component):
 		_world.update_component(_id, component, value);
 	else:
 		_world.add_component(_id, component, value);
 
-func add(component: String, value: Variant) -> void:
+func add(component: StringName, value: Variant) -> void:
 	_world.add_component(_id, component, value);
 
-func remove(component: String) -> bool:
+func remove(component: StringName) -> bool:
 	return _world.remove_component(_id, component);
 
-func update(component: String, value: Variant) -> void:
+func update(component: StringName, value: Variant) -> void:
 	_world.update_component(_id, component, value);
 
 func destroy() -> void:

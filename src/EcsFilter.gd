@@ -2,8 +2,8 @@ class_name EcsFilter
 extends Object
 
 var _world: EcsWorld = null;
-var _includes: Array[String] = [];
-var _excludes: Array[String] = [];
+var _includes: Array[StringName] = [];
+var _excludes: Array[StringName] = [];
 var _entities_matched: Dictionary = {};
 
 # call this before freeing the object
@@ -31,14 +31,14 @@ func set_target(world: EcsWorld) -> EcsFilter:
 			_entities_matched[entity] = null;
 	return self;
 
-func include(component: String) -> EcsFilter:
+func include(component: StringName) -> EcsFilter:
 	assert(_world == null, "Cannot add conditions after setting a target.");
 	assert(not _excludes.has(component), "Filter already excludes component %s." % component);
 	if not _includes.has(component):
 		_includes.append(component);
 	return self;
 
-func exclude(component: String) -> EcsFilter:
+func exclude(component: StringName) -> EcsFilter:
 	assert(_world == null, "Cannot add conditions after setting a target.");
 	assert(not _includes.has(component), "Filter already includes component %s." % component);
 	if not _excludes.has(component):
@@ -77,13 +77,13 @@ func _on_entity_destroyed(entity: int):
 	if _entities_matched.has(entity):
 		_kick(entity);
 
-func _on_component_added(entity: int, _component: String, _value: Variant):
+func _on_component_added(entity: int, _component: StringName, _value: Variant):
 	if not _entities_matched.has(entity) && is_matched(entity):
 		_join(entity);
 	elif _entities_matched.has(entity) && not is_matched(entity):
 		_kick(entity);
 
-func _on_component_removed(entity: int, _component: String, _value: Variant):
+func _on_component_removed(entity: int, _component: StringName, _value: Variant):
 	if not _entities_matched.has(entity) && is_matched(entity):
 		_join(entity);
 	elif _entities_matched.has(entity) && not is_matched(entity):

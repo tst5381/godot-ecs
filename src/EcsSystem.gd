@@ -10,17 +10,17 @@ func _ready():
 	if world != null: world.add_system(self);
 
 # override to react to specific component events.
-func is_observing(_component: String) -> bool:
+func is_observing(_component: StringName) -> bool:
 	return false;
 
 # override to do things on event.
-func on_added(_entity: int, _component: String, _value):
+func on_added(_entity: int, _component: StringName, _value):
 	pass;
 
 # override to do things on event.
-func on_removed(_entity: int, _component: String, _value):
+func on_removed(_entity: int, _component: StringName, _value):
 	pass;
 
 # override to do things on event.
-func on_updated(_entity: int, _component: String, _before, _after):
+func on_updated(_entity: int, _component: StringName, _before, _after):
 	pass;
