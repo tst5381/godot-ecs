@@ -7,9 +7,9 @@ const ERROR_UPDATE = "Cannot update component id '%s' since entity #%s doesn't h
 
 signal entity_created(entity: int);
 signal entity_destroyed(entity: int, components: Dictionary);
-signal component_added(entity: int, component: int, value);
-signal component_removed(entity: int, component: int, value);
-signal component_updated(entity: int, component: int, before, after);
+signal component_added(entity: int, component: String, value);
+signal component_removed(entity: int, component: String, value);
+signal component_updated(entity: int, component: String, before, after);
 
 var _next_id: int = 0;
 var _component_pools: Dictionary = {};
@@ -70,16 +70,16 @@ func exist(entity: int) -> bool:
 	else: 
 		return false;
 
-func has_component(entity: int, component: int) -> bool:
+func has_component(entity: int, component: String) -> bool:
 	assert(exist(entity), ERROR_NOT_EXIST % entity);
 	return _get_component_pool(component).has(entity);
 
-func get_component(entity: int, component: int) -> Variant:
+func get_component(entity: int, component: String) -> Variant:
 	assert(exist(entity), ERROR_NOT_EXIST % entity);
 	var pool = _get_component_pool(component);
 	return pool.get(entity, null);
 
-func add_component(entity: int, component: int, value: Variant) -> void:
+func add_component(entity: int, component: String, value: Variant) -> void:
 	assert(exist(entity), ERROR_NOT_EXIST % entity);
 	var pool = _get_component_pool(component);
 	assert(not pool.has(entity), ERROR_ADD % [component, entity]);
@@ -91,7 +91,7 @@ func add_component(entity: int, component: int, value: Variant) -> void:
 			system.on_added(entity, component, value);
 	component_added.emit(entity, component, value);
 
-func remove_component(entity: int, component: int) -> bool:
+func remove_component(entity: int, component: String) -> bool:
 	assert(exist(entity), ERROR_NOT_EXIST % entity);
 	var pool = _get_component_pool(component);
 	if pool.has(entity):
@@ -107,7 +107,7 @@ func remove_component(entity: int, component: int) -> bool:
 	else:
 		return false;
 
-func update_component(entity: int, component: int, value: Variant) -> void:
+func update_component(entity: int, component: String, value: Variant) -> void:
 	assert(exist(entity), ERROR_NOT_EXIST % entity);
 	var pool = _get_component_pool(component);
 	assert(pool.has(entity), ERROR_UPDATE % [component, entity]);
@@ -118,12 +118,12 @@ func update_component(entity: int, component: int, value: Variant) -> void:
 			system.on_updated(entity, component, before, value);
 	component_updated.emit(entity, component, before, value);
 
-func get_component_pool_copy(component: int) -> Dictionary:
+func get_component_pool_copy(component: String) -> Dictionary:
 	var copy = _get_component_pool(component).duplicate();
 	copy.make_read_only();
 	return copy;
 
-func _get_component_pool(component: int) -> Dictionary:
+func _get_component_pool(component: String) -> Dictionary:
 	var pool = _component_pools.get(component, null);
 	if pool != null: return pool;
 	else:
