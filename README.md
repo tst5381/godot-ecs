@@ -13,9 +13,9 @@ Create an entity from the world. Entities are simply integers.
 var entity:int = world.create_entity()
 ```
 
-Add a component to the entity. Component types are `String`, and values are not statically typed.
+Add a component to the entity. Component types are `StringName`, and values are not statically typed.
 ```python
-var component_type:String = "Tooltip"
+var component_type:StringName = "Tooltip"
 world.add_component(entity, component_type, "A component's value can be any type.")
 ```
 
@@ -24,15 +24,36 @@ Consider defining component types as `const` in a file.
 # Ecs.gd
 class_name Ecs
 
-const Burning = "Burning"
-const Speed = "Speed"
-const Tooltip = "Tooltip";
+const Burning: StringName = "ECS_COMPONENT_BURNING"
+const Speed: StringName = "ECS_COMPONENT_SPEED"
+const Tooltip: StringName = "ECS_COMPONENT_TOOLTIP"
 ```
+
 Then add component like this:
 ```python
 world.add_component(entity, Ecs.Burning, true)
 world.add_component(entity, Ecs.Speed, 1.25)
 ```
+
+Or you can define components like normal types:
+```python
+# GridPosition.gd
+class_name GridPosition
+
+const type: StringName = "ECS_COMPONENT_GRIDPOSITION"
+
+var x_axis: int
+var y_axis: int
+
+func _init(x:int, y:int):
+  x_axis = x
+  y_axis = y
+```
+And use it:
+```python
+world.add_component(entity, GridPosition.type, GridPosition.new(3, 6))
+```
+## EcsRef
 You can get `EcsRef` from the world as a wrapper of entity integer.
 
 `EcsRef` provides shorter and intuitive APIs for convenience.
@@ -47,7 +68,11 @@ if ent.exist() && ent.has(Ecs.Speed):
 var recent_speed = ent.get_value(Ecs.Speed) 
 ent.remove(Ecs.Speed)
 ```
+Be careful that to get a component's value you call `get_value()` not `get()`.
 
+This is error-prone, but `get()` is inherited from `Object` and there is no way to override it.
+
+## EcsSystem
 Extend `EcsSystem` and override functions like `is_observing` to react to component events. 
 ```python
 # BurningSystem.gd
