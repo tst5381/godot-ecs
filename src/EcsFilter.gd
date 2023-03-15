@@ -2,8 +2,8 @@ class_name EcsFilter
 extends Object
 
 var _world: EcsWorld = null;
-var _condition_with: Array[int] = [];
-var _condition_without: Array[int] = [];
+var _includes: Array[int] = [];
+var _excludes: Array[int] = [];
 var _entities_matched: Dictionary = {};
 
 # call this before freeing the object
@@ -11,8 +11,8 @@ func reset():
 	if _world != null:
 		_world._filters.erase(self);
 		_world = null;
-	_condition_with.clear();
-	_condition_without.clear();
+	_includes.clear();
+	_excludes.clear();
 	_entities_matched.clear();
 
 func has_target() -> bool:
@@ -21,7 +21,7 @@ func has_target() -> bool:
 func set_target(world: EcsWorld) -> EcsFilter:
 	assert(world != null, "Provided filter target is null.");
 	assert(_world == null, "Filter target is already set.")
-	assert(_condition_with.size() + _condition_without.size() > 0
+	assert(_includes.size() + _excludes.size() > 0
 	, "Filter must have at least one condition.")
 	_world = world;
 	_world._filters.append(self);
@@ -31,18 +31,18 @@ func set_target(world: EcsWorld) -> EcsFilter:
 			_entities_matched[entity] = null;
 	return self;
 
-func with(component: int) -> EcsFilter:
+func include(component: int) -> EcsFilter:
 	assert(_world == null, "Cannot add conditions after setting a target.");
-	assert(!_condition_without.has(component), "Filter already excludes component %s." % component);
-	if !_condition_with.has(component):
-		_condition_with.append(component);
+	assert(!_excludes.has(component), "Filter already excludes component %s." % component);
+	if !_includes.has(component):
+		_includes.append(component);
 	return self;
 
-func without(component: int) -> EcsFilter:
+func exclude(component: int) -> EcsFilter:
 	assert(_world == null, "Cannot add conditions after setting a target.");
-	assert(!_condition_with.has(component), "Filter already includes component %s." % component);
-	if !_condition_without.has(component):
-		_condition_without.append(component);
+	assert(!_includes.has(component), "Filter already includes component %s." % component);
+	if !_excludes.has(component):
+		_excludes.append(component);
 	return self;
 
 func get_matched_entities() -> Array[int]:
@@ -61,10 +61,10 @@ func get_matched_size() -> int:
 
 func is_matched(entity: int) -> bool:
 	assert(_world != null, "Filter target is not set.");
-	for component in _condition_with:
+	for component in _includes:
 		if !_world.has_component(entity, component):
 			return false;
-	for component in _condition_without:
+	for component in _excludes:
 		if _world.has_component(entity, component):
 			return false;
 	return true;
