@@ -18,7 +18,7 @@ var _filters: Array[EcsFilter] = [];
 var _systems: Array[EcsSystem] = [];
 
 func add_system(system: EcsSystem):
-	if !_systems.has(system): _systems.append(system);
+	if not _systems.has(system): _systems.append(system);
 
 func remove_system(system: EcsSystem):
 	if _systems.has(system): _systems.erase(system);
@@ -82,7 +82,7 @@ func get_component(entity: int, component: int) -> Variant:
 func add_component(entity: int, component: int, value: Variant) -> void:
 	assert(exist(entity), ERROR_NOT_EXIST % entity);
 	var pool = _get_component_pool(component);
-	assert(!pool.has(entity), ERROR_ADD % [component, entity]);
+	assert(not pool.has(entity), ERROR_ADD % [component, entity]);
 	pool[entity] = value;
 	for filter in _filters:
 		filter._on_component_added(entity, component, value);

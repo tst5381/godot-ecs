@@ -33,15 +33,15 @@ func set_target(world: EcsWorld) -> EcsFilter:
 
 func include(component: int) -> EcsFilter:
 	assert(_world == null, "Cannot add conditions after setting a target.");
-	assert(!_excludes.has(component), "Filter already excludes component %s." % component);
-	if !_includes.has(component):
+	assert(not _excludes.has(component), "Filter already excludes component %s." % component);
+	if not _includes.has(component):
 		_includes.append(component);
 	return self;
 
 func exclude(component: int) -> EcsFilter:
 	assert(_world == null, "Cannot add conditions after setting a target.");
-	assert(!_includes.has(component), "Filter already includes component %s." % component);
-	if !_excludes.has(component):
+	assert(not _includes.has(component), "Filter already includes component %s." % component);
+	if not _excludes.has(component):
 		_excludes.append(component);
 	return self;
 
@@ -62,7 +62,7 @@ func get_matched_size() -> int:
 func is_matched(entity: int) -> bool:
 	assert(_world != null, "Filter target is not set.");
 	for component in _includes:
-		if !_world.has_component(entity, component):
+		if not _world.has_component(entity, component):
 			return false;
 	for component in _excludes:
 		if _world.has_component(entity, component):
@@ -70,7 +70,7 @@ func is_matched(entity: int) -> bool:
 	return true;
 
 func _on_entity_created(entity: int):
-	if !_entities_matched.has(entity) && is_matched(entity):
+	if not _entities_matched.has(entity) && is_matched(entity):
 		_join(entity);
 
 func _on_entity_destroyed(entity: int):
@@ -78,19 +78,19 @@ func _on_entity_destroyed(entity: int):
 		_kick(entity);
 
 func _on_component_added(entity: int, _component: int, _value: Variant):
-	if !_entities_matched.has(entity) && is_matched(entity):
+	if not _entities_matched.has(entity) && is_matched(entity):
 		_join(entity);
-	elif _entities_matched.has(entity) && !is_matched(entity):
+	elif _entities_matched.has(entity) && not is_matched(entity):
 		_kick(entity);
 
 func _on_component_removed(entity: int, _component: int, _value: Variant):
-	if !_entities_matched.has(entity) && is_matched(entity):
+	if not _entities_matched.has(entity) && is_matched(entity):
 		_join(entity);
-	elif _entities_matched.has(entity) && !is_matched(entity):
+	elif _entities_matched.has(entity) && not is_matched(entity):
 		_kick(entity);
 
 func _join(entity: int):
-	assert(!_entities_matched.has(entity));
+	assert(not _entities_matched.has(entity));
 	_entities_matched[entity] = null; # only the key is needed.
 	## print("entity #%s is joined." % entity);
 
