@@ -77,10 +77,10 @@ With `EcsFilter` you can query entities with conditions.
 var filter:EcsFilter = EcsFilter.new()
 
 # add first condition.
-filter.with(Ecs.BURNING)
+filter.include(Ecs.BURNING)
 
 # add second condition.
-filter.without(Ecs.SPEED)
+filter.exclude(Ecs.SPEED)
 
 # when a target is set, filter will be applied and updated constantly,
 # and can no longer add conditions.
@@ -92,7 +92,7 @@ var entities:Array[int] = filter.get_matched_entities
 
 Setup functions can be chained.
 ```python
-var filter = EcsFilter.new().with(Ecs.BURNING).without(Ecs.SPEED).set_target(world)
+var filter = EcsFilter.new().include(Ecs.BURNING).exclude(Ecs.SPEED).set_target(world)
 ```
 
 Dispose a filter when it is no longer needed (for the sake of memory and performance.)
