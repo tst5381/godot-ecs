@@ -13,27 +13,25 @@ Create an entity from the world. Entities are simply integers.
 var entity:int = world.create_entity()
 ```
 
-Add a component to the entity. Component types are also integers, and values are not statically typed.
+Add a component to the entity. Component types are `String`, and values are not statically typed.
 ```python
-var component_type:int = 0
-world.add_component(entity, component_type, "component's value")
+var component_type:String = "Tooltip"
+world.add_component(entity, component_type, "A component's value can be any type.")
 ```
 
-Consider defining component types by enum for better readability.
+Consider defining component types as `const` in a file.
 ```python
 # Ecs.gd
 class_name Ecs
 
-enum
-{
-  BURNING,
-  SPEED,
-  TOOLTIP,
-}
+const Burning = "Burning"
+const Speed = "Speed"
+const Tooltip = "Tooltip";
 ```
+Then add component like this:
 ```python
-world.add_component(entity, Ecs.BURNING, true)
-world.add_component(entity, Ecs.SPEED, 1.25)
+world.add_component(entity, Ecs.Burning, true)
+world.add_component(entity, Ecs.Speed, 1.25)
 ```
 You can get `EcsRef` from the world as a wrapper of entity integer.
 
@@ -41,13 +39,13 @@ You can get `EcsRef` from the world as a wrapper of entity integer.
 ```python
 var ent:EcsRef = world.create_entity_to_ref()
 
-ent.add(Ecs.SPEED, 1.25)
+ent.add(Ecs.Speed, 1.25)
 
-if ent.exist() && ent.has(Ecs.SPEED):
-  ent.update(Ecs.SPEED, 1.8)
+if ent.exist() && ent.has(Ecs.Speed):
+  ent.update(Ecs.Speed, 1.8)
 
-var recentSpeed = ent.get_value(Ecs.SPEED) 
-ent.remove(Ecs.SPEED)
+var recent_speed = ent.get_value(Ecs.Speed) 
+ent.remove(Ecs.Speed)
 ```
 
 Extend `EcsSystem` and override functions like `is_observing` to react to component events. 
@@ -56,7 +54,7 @@ Extend `EcsSystem` and override functions like `is_observing` to react to compon
 extends EcsSystem
 
 func is_observing(component) -> bool:
-  return component == Ecs.BURNING
+  return component == Ecs.Burning
 
 func on_added(entity, component, value):
   # do things when component is added to entity.
@@ -77,22 +75,22 @@ With `EcsFilter` you can query entities with conditions.
 var filter:EcsFilter = EcsFilter.new()
 
 # add first condition.
-filter.include(Ecs.BURNING)
+filter.include(Ecs.Burning)
 
 # add second condition.
-filter.exclude(Ecs.SPEED)
+filter.exclude(Ecs.Speed)
 
 # when a target is set, filter will be applied and updated constantly,
 # and can no longer add conditions.
 filter.set_target(world)
 
-# returns an array of entities that have BURNING but not SPEED.
+# returns an array of entities that have Burning but not Speed.
 var entities:Array[int] = filter.get_matched_entities
 ```
 
 Setup functions can be chained.
 ```python
-var filter = EcsFilter.new().include(Ecs.BURNING).exclude(Ecs.SPEED).set_target(world)
+var filter = EcsFilter.new().include(Ecs.Burning).exclude(Ecs.Speed).set_target(world)
 ```
 
 Dispose a filter when it is no longer needed (for the sake of memory and performance.)
@@ -113,6 +111,6 @@ var nullable:EcsRefNullable = ent.to_nullable()
 
 ent.destroy() # removes the entity from the world.
 
-nullable.add(Ecs.SPEED, 1.5) # will do nothing.
-ent.add(Ecs.SPEED, 1.5) # will throw an error.
+nullable.add(Ecs.Speed, 1.5) # will do nothing.
+ent.add(Ecs.Speed, 1.5) # will throw an error.
 ```
