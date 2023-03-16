@@ -24,9 +24,9 @@ Consider defining component types as `const` in a file.
 # Ecs.gd
 class_name Ecs
 
-const Burning: StringName = "ECS_COMPONENT_BURNING"
-const Speed: StringName = "ECS_COMPONENT_SPEED"
-const Tooltip: StringName = "ECS_COMPONENT_TOOLTIP"
+const Burning: StringName = "Ecs_Component_Burning"
+const Speed: StringName = "Ecs_Component_Speed"
+const Tooltip: StringName = "Ecs_Component_Tooltip"
 ```
 
 Then add component like this:
