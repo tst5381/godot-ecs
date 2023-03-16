@@ -40,12 +40,12 @@ Or you can define components like normal types:
 # GridPosition.gd
 class_name GridPosition
 
-const type: StringName = "ECS_COMPONENT_GRIDPOSITION"
+const type: StringName = "Ecs_Component_GridPosition"
 
 var x_axis: int
 var y_axis: int
 
-func _init(x:int, y:int):
+func _init(x: int, y: int):
   x_axis = x
   y_axis = y
 ```
