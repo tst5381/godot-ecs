@@ -4,23 +4,23 @@
 To start, attach `EcsWorld.gd` to a node and reference it in other scripts.
 
 You can also create an instance of `EcsWorld` by code:
-```python
+```gdscript
 var world:EcsWorld = EcsWorld.new()
 ```
 
 Create an entity from the world. Entities are simply integers.
-```python
+```gdscript
 var entity:int = world.create_entity()
 ```
 
 Add a component to the entity. Component types are `StringName`, and values are not statically typed.
-```python
+```gdscript
 var component_type:StringName = "Tooltip"
 world.add_component(entity, component_type, "This is the value of the component.")
 ```
 
 Consider defining component types as `const` in a file.
-```python
+```gdscript
 # Ecs.gd
 class_name Ecs
 
@@ -30,13 +30,13 @@ const Tooltip: StringName = "ECS_COMPONENT_TOOLTIP"
 ```
 
 Then add component like this:
-```python
+```gdscript
 world.add_component(entity, Ecs.Burning, true)
 world.add_component(entity, Ecs.Speed, 1.25)
 ```
 
 Or you can define components like normal types:
-```python
+```gdscript
 # GridPosition.gd
 class_name GridPosition
 
@@ -50,14 +50,14 @@ func _init(x:int, y:int):
   y_axis = y
 ```
 And use it:
-```python
+```gdscript
 world.add_component(entity, GridPosition.type, GridPosition.new(3, 6))
 ```
 ## EcsRef
 You can get `EcsRef` from the world as a wrapper of entity integer.
 
 `EcsRef` provides shorter and intuitive APIs for convenience.
-```python
+```gdscript
 var ent:EcsRef = world.create_entity_to_ref()
 
 ent.add(Ecs.Speed, 1.25)
@@ -74,7 +74,7 @@ This is error-prone, but `get()` is inherited from `Object` and there is no way 
 
 ## System
 Extend `EcsSystem` and override functions like `is_observing` to react to component events. 
-```python
+```gdscript
 # BurningSystem.gd
 extends EcsSystem
 
@@ -96,7 +96,7 @@ To use it, attach `BurningSystem.gd` to a node, and link `EcsWorld` node via the
 
 ## Filter
 With `EcsFilter` you can query entities with conditions.
-```python
+```gdscript
 var filter:EcsFilter = EcsFilter.new()
 
 # add first condition.
@@ -114,12 +114,12 @@ var entities:Array[int] = filter.get_matched_entities
 ```
 
 Setup functions can be chained.
-```python
+```gdscript
 var filter = EcsFilter.new().include(Ecs.Burning).exclude(Ecs.Speed).set_target(world)
 ```
 
 Dispose a filter when it is no longer needed (for the sake of memory and performance.)
-```python
+```gdscript
 # this removes filter from the world, so it can be freed safely.
 filter.reset()
 
@@ -130,7 +130,7 @@ filter.free()
 `EcsRef` can be converted to `EcsRefNullable` and vise versa.
 
 `EcsRefNullable` will skip operations when the entity does not exist, while `EcsRef` will throw errors.
-```python
+```gdscript
 var ent:EcsRef = world.create_entity_to_ref()
 var nullable:EcsRefNullable = ent.to_nullable()
 
